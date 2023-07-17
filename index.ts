@@ -12,8 +12,7 @@ class BootLevel extends Phaser.Scene {
   preload() {
     // CHANGE BASE URL!!!!
     this.add.text(20, 20, 'Boot Sequence Initiated.');
-    this.load.baseURL =
-      'https://jsnyder116.github.io/My-Starter-Boiler-plate/';
+    this.load.baseURL = 'https://jsnyder116.github.io/My-Starter-Boiler-plate/';
     this.load.bitmapFont({
       key: 'Shadowsintolightfontgreen',
       textureURL: 'static/assets/font/Shadowsintolightfontgreen.png',
@@ -21,7 +20,6 @@ class BootLevel extends Phaser.Scene {
     });
     this.load.image('logo', 'static/assets/pumpkinlogo2.png');
     this.load.image('splashscreen', 'static/assets/pumpkinlogo2.png');
-    
   }
 
   create() {
@@ -42,11 +40,22 @@ class SplashLevel extends Phaser.Scene {
     logo.setScale(0.7);
     this.logo = logo;
 
-    const text1 = this.add.bitmapText(400, 400, 'Shadowsintolightfontgreen', 'Pumpkin Programming', 100);
+    const text1 = this.add.bitmapText(
+      400,
+      400,
+      'Shadowsintolightfontgreen',
+      'Pumpkin Programming',
+      100
+    );
     this.companyLine1 = text1;
-    const text2 = this.add.bitmapText(400, 400, 'Shadowsintolightfontgreen', '',45);
+    const text2 = this.add.bitmapText(
+      400,
+      400,
+      'Shadowsintolightfontgreen',
+      '',
+      45
+    );
     this.companyLine2 = text2;
-    
 
     const loading = this.add.text(15, 50, ['Loading...not really'], {
       fontFamily: 'Shadowsintolight',
@@ -55,7 +64,9 @@ class SplashLevel extends Phaser.Scene {
     });
 
     /* START PRELOAD ITEMS */
-
+    this.load.baseURL =
+      'https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/';
+    this.load.image('ship', 'static/assets/ship.png');
     /* END PRELOAD ITEMS */
   }
   private logo: Phaser.GameObjects.Image;
@@ -74,7 +85,7 @@ class SplashLevel extends Phaser.Scene {
     this.tweens.add({
       targets: this.companyLine1, //your image that must spin
       x: '100',
-      y: '660', 
+      y: '660',
       ease: 'Bounce',
       duration: 800, //duration is in milliseconds
     });
@@ -102,13 +113,10 @@ class MainLevel extends Phaser.Scene {
   }
 
   preload() {
-    this.load.baseURL="https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/";
-    this.load.image("ship","static/assets/piskel image/Asteroids ship.png");
+    this.physics.add.sprite(100, 100, 'ship');
   }
 
-  create() {
-    this.add.image (100,100,"ship");
-  }
+  create() {}
 
   update() {}
 }
@@ -129,7 +137,6 @@ const config = {
     },
   },
   scene: [BootLevel, SplashLevel, MainLevel],
-
 };
 
 const game = new Phaser.Game(config);
