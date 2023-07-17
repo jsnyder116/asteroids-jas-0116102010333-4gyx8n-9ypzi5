@@ -87,7 +87,7 @@ class SplashLevel extends Phaser.Scene {
     });
 
     setTimeout(() => {
-      //this.scene.start('MainLevel');
+      this.scene.start('MainLevel');
     }, 2000);
   }
 
@@ -101,9 +101,14 @@ class MainLevel extends Phaser.Scene {
     super({ key: 'MainLevel' });
   }
 
-  preload() {}
+  preload() {
+    this.load.baseURL="https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/";
+    this.load.image("ship","static/assets/piskel image/Asteroids ship.png");
+  }
 
-  create() {}
+  create() {
+    this.add.image (100,100,"ship");
+  }
 
   update() {}
 }
