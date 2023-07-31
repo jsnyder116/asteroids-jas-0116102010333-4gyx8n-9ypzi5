@@ -66,7 +66,7 @@ class SplashLevel extends Phaser.Scene {
     /* START PRELOAD ITEMS */
     this.load.baseURL =
       'https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/';
-    this.load.image('ship', 'static/assets/Asteroids ship.png');
+    this.load.image('ship', 'static/assets/ship.png');
     /* END PRELOAD ITEMS */
   }
   private logo: Phaser.GameObjects.Image;
@@ -88,7 +88,7 @@ class SplashLevel extends Phaser.Scene {
       y: '500',
       ease: 'Bounce',
       duration: 1600, //duration is in milliseconds
-    })
+    });
     this.tweens.add({
       targets: this.companyLine2, //your image that must spin
       x: '650',
@@ -112,20 +112,37 @@ class MainLevel extends Phaser.Scene {
     super({ key: 'MainLevel' });
   }
 
-  preload() {
-    this.physics.add.sprite(400, 300, 'Asteroids ship.png');
-  }
+  preload() {}
 
   create() {
     let g = this.add.graphics();
-    g.fillStyle(0x0000000000000000000000000, 0.3).fillRect(0, 0, 800, 600);
-    g.lineStyle(100, 0xffffff).strokeRect(0, 0, 800, 600);
+    g.fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
+    g.lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
+
+    const ship = this.physics.add.sprite(400, 300, 'ship');
+    const cursorKeys = this.input.keyboard.createCursorKeys();
+    this.cursorKeys = cursorKeys;
+    this.ship=ship;
   }
+  private ship: Phaser.GameObjects.Sprite
+  private bullet
+  private fire
+  private asteroid
+  private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
 
   update() {
-   
+    this.moveSprite()
   }
-}
+
+  moveSprite(){
+    if (this.cursorKeys.up.isDown) {
+    this.ship.y -=1}
+    if (this.cursorKeys.right.isDown) {
+    this.ship.angle +=1}
+    if (this.cursorKeys.left.isDown) {
+    this.ship.angle -=1}
+  }
+} 
 
 /* -------------------------------------------------------------------------- */
 /*                                RUN GAME.                                   */
