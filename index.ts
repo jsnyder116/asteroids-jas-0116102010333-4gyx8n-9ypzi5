@@ -59,7 +59,7 @@ class SplashLevel extends Phaser.Scene {
 
     const loading = this.add.text(0, 0, ['Loading...not really'], {
       fontFamily: 'Shadowsintolight',
-      fontSize: '45px',
+      fontSize: '40px',
       color: 'white',
     });
 
@@ -118,8 +118,8 @@ class MainLevel extends Phaser.Scene {
 
   create() {
     let g = this.add.graphics();
-    g.fillStyle(0xFFFFFF, 0.3).fillRect(0, 0, 800, 600);
-    g.lineStyle(1, 0x000000).strokeRect(0, 0, 800, 600);
+    g.fillStyle(0x0000000000000000000000000, 0.3).fillRect(0, 0, 800, 600);
+    g.lineStyle(100, 0xffffff).strokeRect(0, 0, 800, 600);
   }
 
   update() {
