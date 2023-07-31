@@ -36,16 +36,16 @@ class SplashLevel extends Phaser.Scene {
   preload() {
     //const splashScreen = this.add.image(200, 200, 'splashscreen');
 
-    const logo = this.add.image(500, 400, 'logo');
+    const logo = this.add.image(400, 300, 'logo');
     logo.setScale(0.7);
     this.logo = logo;
 
     const text1 = this.add.bitmapText(
-      400,
-      400,
+      200,
+      200,
       'Shadowsintolightfontgreen',
       'Pumpkin Programming',
-      80
+      60
     );
     this.companyLine1 = text1;
     const text2 = this.add.bitmapText(
@@ -57,9 +57,9 @@ class SplashLevel extends Phaser.Scene {
     );
     this.companyLine2 = text2;
 
-    const loading = this.add.text(15, 70, ['Loading...not really'], {
+    const loading = this.add.text(0, 0, ['Loading...not really'], {
       fontFamily: 'Shadowsintolight',
-      fontSize: '60px',
+      fontSize: '45px',
       color: 'white',
     });
 
@@ -85,10 +85,10 @@ class SplashLevel extends Phaser.Scene {
     this.tweens.add({
       targets: this.companyLine1, //your image that must spin
       x: '175',
-      y: '590',
+      y: '500',
       ease: 'Bounce',
       duration: 1600, //duration is in milliseconds
-    });
+    })
     this.tweens.add({
       targets: this.companyLine2, //your image that must spin
       x: '650',
@@ -113,12 +113,18 @@ class MainLevel extends Phaser.Scene {
   }
 
   preload() {
-    this.physics.add.sprite(500, 400, 'Asteroids ship.png');
+    this.physics.add.sprite(400, 300, 'Asteroids ship.png');
   }
 
-  create() {}
+  create() {
+    let g = this.add.graphics();
+    g.fillStyle(0xFFFFFF, 0.3).fillRect(0, 0, 800, 600);
+    g.lineStyle(1, 0x000000).strokeRect(0, 0, 800, 600);
+  }
 
-  update() {}
+  update() {
+   
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -127,8 +133,8 @@ class MainLevel extends Phaser.Scene {
 
 const config = {
   type: Phaser.AUTO,
-  width: 1000,
-  height: 800,
+  width: 800,
+  height: 600,
   backgroundColor: '#ffb64f',
   physics: {
     default: 'arcade',
