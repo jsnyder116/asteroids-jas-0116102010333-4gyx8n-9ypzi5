@@ -132,14 +132,19 @@ class MainLevel extends Phaser.Scene {
 
   update() {
     this.moveSprite()
+    var x = 800
+    if (x=800) {
+      this.ship.x -=800;    
+    }
   }
 
   moveSprite(){
     if (this.cursorKeys.up.isDown) {
-    this.moveForward(this.ship,1)
-    }
+    this.moveForward(this.ship,1) }
+
     if (this.cursorKeys.right.isDown) { 
     this.ship.angle +=1 }
+
     if (this.cursorKeys.left.isDown) {
     this.ship.angle -=1}
   }
