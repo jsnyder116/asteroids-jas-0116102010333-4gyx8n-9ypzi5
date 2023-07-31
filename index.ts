@@ -124,7 +124,7 @@ class MainLevel extends Phaser.Scene {
     this.cursorKeys = cursorKeys;
     this.ship=ship;
   }
-  private ship: Phaser.GameObjects.Sprite
+  private ship: Phaser.GameObjects.Sprite;
   private bullet
   private fire
   private asteroid
@@ -136,7 +136,7 @@ class MainLevel extends Phaser.Scene {
 
   moveSprite(){
     if (this.cursorKeys.up.isDown) {
-    this.moveForward(this.ship,4)
+    this.moveForward(this.ship,1)
     }
     if (this.cursorKeys.right.isDown) { 
     this.ship.angle +=1 }
