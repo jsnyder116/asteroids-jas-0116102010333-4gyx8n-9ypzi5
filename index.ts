@@ -136,12 +136,22 @@ class MainLevel extends Phaser.Scene {
 
   moveSprite(){
     if (this.cursorKeys.up.isDown) {
-    this.ship.y -=1}
-    if (this.cursorKeys.right.isDown) {
-    this.ship.angle +=1}
+    this.moveForward(this.ship,4)
+    }
+    if (this.cursorKeys.right.isDown) { 
+    this.ship.angle +=1 }
     if (this.cursorKeys.left.isDown) {
     this.ship.angle -=1}
   }
+
+moveForward(gameObject: Phaser.GameObjects.Sprite, speed: number = 1) {
+  //angle in radians
+  var angleRad = (gameObject.angle - 90) * (Math.PI / 180); 
+  
+  gameObject.x = gameObject.x + 1 * Math.cos(angleRad) * speed;
+  gameObject.y = gameObject.y + 1 * Math.sin(angleRad) * speed;
+}
+
 } 
 
 /* -------------------------------------------------------------------------- */
