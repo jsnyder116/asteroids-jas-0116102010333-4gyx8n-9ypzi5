@@ -138,6 +138,12 @@ class MainLevel extends Phaser.Scene {
     if (this.ship.x <= 0) {
       this.ship.x += 800; 
      }
+     if (this.ship.y >= 600) {
+      this.ship.y -= 600; 
+     }
+     if (this.ship.y <= 0) {
+       this.ship.y += 600; 
+      }
   }
 
   moveSprite(){
