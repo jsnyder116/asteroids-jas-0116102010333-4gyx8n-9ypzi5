@@ -67,6 +67,7 @@ class SplashLevel extends Phaser.Scene {
     this.load.baseURL =
       'https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/';
     this.load.image('ship', 'static/assets/ship.png');
+    this.load.image('asteroid', 'static/assets/Asteroid Piskel.png');
     /* END PRELOAD ITEMS */
   }
   private logo: Phaser.GameObjects.Image;
@@ -118,16 +119,17 @@ class MainLevel extends Phaser.Scene {
     let g = this.add.graphics();
     g.fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
     g.lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
-
+    const asteroid = this.physics.add.sprite(40, 300, 'asteroid');
     const ship = this.physics.add.sprite(400, 300, 'ship');
     const cursorKeys = this.input.keyboard.createCursorKeys();
     this.cursorKeys = cursorKeys;
     this.ship=ship;
+    this.asteroid=asteroid;
   }
   private ship: Phaser.GameObjects.Sprite;
   private bullet
   private fire
-  private asteroid
+  private asteroid: Phaser.GameObjects.Sprite;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
 
   update() {
