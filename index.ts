@@ -67,7 +67,7 @@ class SplashLevel extends Phaser.Scene {
     this.load.baseURL =
       'https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/';
     this.load.image('ship', 'static/assets/ship.png');
-    this.load.image('asteroid', 'static/assets/Asteroid Piskel.png');
+    this.load.image('asteroid', 'static/piskel image/Asteroid Piskel.png');
     /* END PRELOAD ITEMS */
   }
   private logo: Phaser.GameObjects.Image;
@@ -109,65 +109,128 @@ class SplashLevel extends Phaser.Scene {
 /* ----------------------------------- MAIN SCENE --------------------------------- */
 
 class MainLevel extends Phaser.Scene {
-  constructor() {
-    super({ key: 'MainLevel' });
-  }
-
-  preload() {}
-
-  create() {
-    let g = this.add.graphics();
-    g.fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
-    g.lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
-    const asteroid = this.physics.add.sprite(40, 300, 'asteroid');
-    const ship = this.physics.add.sprite(400, 300, 'ship');
-    const cursorKeys = this.input.keyboard.createCursorKeys();
-    this.cursorKeys = cursorKeys;
-    this.ship=ship;
-    this.asteroid=asteroid;
-  }
   private ship: Phaser.GameObjects.Sprite;
-  private bullet
-  private fire
-  private asteroid: Phaser.GameObjects.Sprite;
+  private asteroids: Phaser.Physics.Arcade.Group;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
 
+  constructor() {
+      super({ key: 'MainLevel' });
+  }
+
+  preload() {
+      this.load.image('ship', 'path/to/ship.png');
+      this.load.image('asteroid', 'path/to/asteroid.png');
+  }
+
+  create() {
+      this.physics.world.setBounds(0, 0, 800, 600);
+
+      
+
+      this.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
+      this.add.graphics().lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
+      var randomNumberx = Phaser.Math.Between(0, 800);
+      var randomNumbery = Phaser.Math.Between(0, 600);
+
+      const ship = this.physics.add.sprite(400, 300, 'ship');
+
+      
+
+      const cursorKeys = this.input.keyboard.createCursorKeys();
+      this.cursorKeys = cursorKeys;
+      this.ship = ship;
+      
+
+
+      this.asteroids = this.physics.add.group({
+        key: 'asteroid',
+        repeat: 10, // Create 9 additional asteroids
+        setXY: { x: 0, y: 0, stepX: 80 } // Adjust spacing between asteroids
+    });
+
+    this.asteroids.children.iterate(asteroid => {
+        var randomAngle = Phaser.Math.Between(1, 360);
+        asteroid.angle = randomAngle;
+    });
+    this.physics.add.collider(ship, this.asteroids, this.handleCollision, null, this);
+  }
+
   update() {
-    this.moveSprite()
-    if (this.ship.x >= 800) {
-     this.ship.x -= 800; 
-    }
-    if (this.ship.x <= 0) {
-      this.ship.x += 800; 
-     }
-     if (this.ship.y >= 600) {
-      this.ship.y -= 600; 
-     }
-     if (this.ship.y <= 0) {
-       this.ship.y += 600; 
+      this.moveSprite();
+      this.moveAsteroid();
+      this.checkBoundary();
+  }
+  moveAsteroid() {
+    this.asteroids.children.iterate(asteroid => {
+      this.moveForward(asteroid, 1)
+      if (asteroid.x >= 800) {
+        asteroid.x -= 800;
+      }
+      if (asteroid.x <= 0) {
+          asteroid.x += 800;
+      }
+  
+      if (asteroid.y >= 600) {
+          asteroid.y -= 600;
+      }
+  
+      if (asteroid.y <= 0) {
+          asteroid.y += 600;
+      }
+
+  });
+
+
+  }
+  moveSprite() {
+      if (this.cursorKeys.up.isDown) {
+          this.moveForward(this.ship, 1);
+      }
+
+      if (this.cursorKeys.right.isDown) {
+          this.ship.angle += 1;
+      }
+
+      if (this.cursorKeys.left.isDown) {
+          this.ship.angle -= 1;
       }
   }
 
-  moveSprite(){
-    if (this.cursorKeys.up.isDown) {
-    this.moveForward(this.ship,1) }
-
-    if (this.cursorKeys.right.isDown) { 
-    this.ship.angle +=1 }
-
-    if (this.cursorKeys.left.isDown) {
-    this.ship.angle -=1}
+  moveForward(gameObject, speed = 1) {
+      const angleRad = (gameObject.angle - 90) * (Math.PI / 180);
+      gameObject.x = gameObject.x + 1 * Math.cos(angleRad) * speed;
+      gameObject.y = gameObject.y + 1 * Math.sin(angleRad) * speed;
   }
 
-moveForward(gameObject: Phaser.GameObjects.Sprite, speed: number = 1) {
-  //angle in radians
-  var angleRad = (gameObject.angle - 90) * (Math.PI / 180); 
-  
-  gameObject.x = gameObject.x + 1 * Math.cos(angleRad) * speed;
-  gameObject.y = gameObject.y + 1 * Math.sin(angleRad) * speed;
+  checkBoundary() {
+      if (this.ship.x >= 800) {
+          this.ship.x -= 800;
+      }
+
+      if (this.ship.x <= 0) {
+          this.ship.x += 800;
+      }
+
+      if (this.ship.y >= 600) {
+          this.ship.y -= 600;
+      }
+
+      if (this.ship.y <= 0) {
+          this.ship.y += 600;
+      }
+      if (this.ship.x >= 800) {
+        this.ship.x -= 800;
+    }
+  }
+
+  private handleCollision(ship, asteroid) {
+      console.log('Collision detected between ship and asteroids!');
+      this.scene.start('MainLevel');
+      // Implement collision handling logic here
+      // For example, you can restart the level, decrease health, etc.
+  }
 }
 
-} 
 
 /* -------------------------------------------------------------------------- */
 /*                                RUN GAME.                                   */
@@ -181,6 +244,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
+      debug: true,
       gravity: { y: 0 },
     },
   },
