@@ -112,6 +112,7 @@ class MainLevel extends Phaser.Scene {
   private ship: Phaser.GameObjects.Sprite;
   private asteroids: Phaser.Physics.Arcade.Group;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  private bullet: Phaser.GameObjects.Sprite;
 
   constructor() {
       super({ key: 'MainLevel' });
@@ -180,7 +181,10 @@ class MainLevel extends Phaser.Scene {
 
   });
 
-
+ 
+  }
+  movebullet() {
+    
   }
   moveSprite() {
       if (this.cursorKeys.up.isDown) {
