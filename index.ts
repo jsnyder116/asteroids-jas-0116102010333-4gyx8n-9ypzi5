@@ -68,6 +68,7 @@ class SplashLevel extends Phaser.Scene {
       'https://jsnyder116.github.io/asteroids-jas-0116102010333-4gyx8n-9ypzi5/';
     this.load.image('ship', 'static/assets/ship.png');
     this.load.image('asteroid', 'static/piskel image/Asteroid Piskel.png');
+    this.load.image('bullet', 'static/piskel image/Bullet Piskel.png');
     /* END PRELOAD ITEMS */
   }
   private logo: Phaser.GameObjects.Image;
@@ -126,7 +127,7 @@ class MainLevel extends Phaser.Scene {
   create() {
       this.physics.world.setBounds(0, 0, 800, 600);
 
-      
+      const bullet = this.physics.add.sprite
 
       this.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
       this.add.graphics().lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
@@ -183,6 +184,7 @@ class MainLevel extends Phaser.Scene {
 
  
   }
+  
   movebullet() {
     
   }
