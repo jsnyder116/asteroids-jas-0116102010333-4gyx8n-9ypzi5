@@ -114,20 +114,22 @@ class MainLevel extends Phaser.Scene {
   private asteroids: Phaser.Physics.Arcade.Group;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   private bullet: Phaser.GameObjects.Sprite;
+  private bulletActive: boolean = false;
 
   constructor() {
       super({ key: 'MainLevel' });
   }
 
   preload() {
+    this.load.image('bullet', 'static/piskel image/Bullet Piskel.png');
       this.load.image('ship', 'path/to/ship.png');
       this.load.image('asteroid', 'path/to/asteroid.png');
+      this.load.image('bullet', 'path/to/bullet.png');
   }
 
   create() {
       this.physics.world.setBounds(0, 0, 800, 600);
 
-      const bullet = this.physics.add.sprite
 
       this.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
       this.add.graphics().lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
@@ -136,7 +138,6 @@ class MainLevel extends Phaser.Scene {
 
       const ship = this.physics.add.sprite(400, 300, 'ship');
 
-      
 
       const cursorKeys = this.input.keyboard.createCursorKeys();
       this.cursorKeys = cursorKeys;
@@ -155,12 +156,24 @@ class MainLevel extends Phaser.Scene {
         asteroid.angle = randomAngle;
     });
     this.physics.add.collider(ship, this.asteroids, this.handleCollision, null, this);
+
+    this.bullet = this.physics.add.sprite(-100, -100, 'bullet');
   }
 
   update() {
+   
       this.moveSprite();
       this.moveAsteroid();
       this.checkBoundary();
+      if (this.bulletActive) {
+        this.moveBullet();
+
+        this.physics.overlap(this.bullet, this.asteroids, this.handleBulletAsteroidCollision, null, this);
+
+        if (this.bullet.x < 0 || this.bullet.x > 800 || this.bullet.y < 0 || this.bullet.y > 600) {
+            this.resetBullet();
+        }
+      }
   }
   moveAsteroid() {
     this.asteroids.children.iterate(asteroid => {
@@ -184,10 +197,32 @@ class MainLevel extends Phaser.Scene {
 
  
   }
-  
-  movebullet() {
+  moveBullet() {
+    this.moveForward(this.bullet, 5);
+}
+  spawnBullet() {
     
-  }
+    const angleRad = (this.ship.angle - 90) * (Math.PI / 180);
+    const offsetX = Math.cos(angleRad) * 40;
+    const offsetY = Math.sin(angleRad) * 40;
+
+    this.bullet.setTexture('bullet'); // Set the texture to the loaded bullet image
+    this.bullet.setPosition(this.ship.x + offsetX, this.ship.y + offsetY);
+    this.bullet.angle = this.ship.angle;
+    this.bullet.setVelocity(Math.cos(angleRad) * 300, Math.sin(angleRad) * 300);
+
+    this.bulletActive = true;
+}
+handleBulletAsteroidCollision(bullet, asteroid) {
+  // Handle bullet-asteroid collision here
+  this.resetBullet();
+  asteroid.destroy(); // Destroy the asteroid on collision
+}
+resetBullet() {
+  this.bullet.setPosition(-100, -100);
+  this.bullet.setVelocity(0, 0);
+  this.bulletActive = false;
+}
   moveSprite() {
       if (this.cursorKeys.up.isDown) {
           this.moveForward(this.ship, 1);
@@ -199,6 +234,12 @@ class MainLevel extends Phaser.Scene {
 
       if (this.cursorKeys.left.isDown) {
           this.ship.angle -= 1;
+      }
+      if (this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).isDown) {
+        if (!this.bulletActive) {
+            this.spawnBullet();
+        }
+       
       }
   }
 
