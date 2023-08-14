@@ -117,88 +117,95 @@ class MainLevel extends Phaser.Scene {
   private bulletActive: boolean = false;
 
   constructor() {
-      super({ key: 'MainLevel' });
+    super({ key: 'MainLevel' });
   }
 
-  preload() {
-
-  }
+  preload() {}
 
   create() {
-      this.physics.world.setBounds(0, 0, 800, 600);
+    this.physics.world.setBounds(0, 0, 800, 600);
 
+    this.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
+    this.add.graphics().lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
+    var randomNumberx = Phaser.Math.Between(0, 800);
+    var randomNumbery = Phaser.Math.Between(0, 600);
+    var randomNumber = Phaser.Math.Between(0, 100);
 
-      this.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, 800, 600);
-      this.add.graphics().lineStyle(1, 0xffffff).strokeRect(0, 0, 800, 600);
-      var randomNumberx = Phaser.Math.Between(0, 800);
-      var randomNumbery = Phaser.Math.Between(0, 600);
+    const ship = this.physics.add.sprite(400, 300, 'ship');
 
-      const ship = this.physics.add.sprite(400, 300, 'ship');
+    const cursorKeys = this.input.keyboard.createCursorKeys();
+    this.cursorKeys = cursorKeys;
+    this.ship = ship;
 
-
-      const cursorKeys = this.input.keyboard.createCursorKeys();
-      this.cursorKeys = cursorKeys;
-      this.ship = ship;
-      
-
-
-      this.asteroids = this.physics.add.group({
-        key: 'asteroid',
-        repeat: 10, // Create 9 additional asteroids
-        setXY: { x: 0, y: 0, stepX: 80 } // Adjust spacing between asteroids
+    this.asteroids = this.physics.add.group({
+      key: 'asteroid',
+      repeat: 10, // Create 9 additional asteroids
+      setXY: { x: 0, y: 0, stepX: 80 }, // Adjust spacing between asteroids
     });
 
-    this.asteroids.children.iterate(asteroid => {
-        var randomAngle = Phaser.Math.Between(1, 360);
-        asteroid.angle = randomAngle;
+    this.asteroids.children.iterate((asteroid) => {
+      var randomAngle = Phaser.Math.Between(1, 360);
+      asteroid.angle = randomAngle;
     });
-    this.physics.add.collider(ship, this.asteroids, this.handleCollision, null, this);
+    this.physics.add.collider(
+      ship,
+      this.asteroids,
+      this.handleCollision,
+      null,
+      this
+    );
 
     this.bullet = this.physics.add.sprite(-100, -100, 'bullet');
   }
 
   update() {
-   
-      this.moveSprite();
-      this.moveAsteroid();
-      this.checkBoundary();
-      if (this.bulletActive) {
-        this.moveBullet();
+    this.moveSprite();
+    this.moveAsteroid();
+    this.checkBoundary();
+    if (this.bulletActive) {
+      this.moveBullet();
 
-        this.physics.overlap(this.bullet, this.asteroids, this.handleBulletAsteroidCollision, null, this);
+      this.physics.overlap(
+        this.bullet,
+        this.asteroids,
+        this.handleBulletAsteroidCollision,
+        null,
+        this
+      );
 
-        if (this.bullet.x < 0 || this.bullet.x > 800 || this.bullet.y < 0 || this.bullet.y > 600) {
-            this.resetBullet();
-        }
+      if (
+        this.bullet.x < 0 ||
+        this.bullet.x > 800 ||
+        this.bullet.y < 0 ||
+        this.bullet.y > 600
+      ) {
+        this.resetBullet();
       }
+    }
   }
   moveAsteroid() {
-    this.asteroids.children.iterate(asteroid => {
-      this.moveForward(asteroid, 1)
+    this.asteroids.children.iterate((asteroid) => {
+      this.moveForward(asteroid, 1);
       if (asteroid.x >= 800) {
         asteroid.x -= 800;
       }
       if (asteroid.x <= 0) {
-          asteroid.x += 800;
+        asteroid.x += 800;
       }
-  
+
       if (asteroid.y >= 600) {
-          asteroid.y -= 600;
+        asteroid.y -= 600;
       }
-  
+
       if (asteroid.y <= 0) {
-          asteroid.y += 600;
+        asteroid.y += 600;
       }
-
-  });
-
- 
+    });
   }
   moveBullet() {
     this.moveForward(this.bullet, 5);
-}
+  }
   spawnBullet() {
-    
     const angleRad = (this.ship.angle - 90) * (Math.PI / 180);
     const offsetX = Math.cos(angleRad) * 40;
     const offsetY = Math.sin(angleRad) * 40;
@@ -209,72 +216,74 @@ class MainLevel extends Phaser.Scene {
     this.bullet.setVelocity(Math.cos(angleRad) * 300, Math.sin(angleRad) * 300);
 
     this.bulletActive = true;
-}
-handleBulletAsteroidCollision(bullet, asteroid) {
-  // Handle bullet-asteroid collision here
-  this.resetBullet();
-  asteroid.destroy(); // Destroy the asteroid on collision
-}
-resetBullet() {
-  this.bullet.setPosition(-100, -100);
-  this.bullet.setVelocity(0, 0);
-  this.bulletActive = false;
-}
+  }
+  handleBulletAsteroidCollision(bullet, asteroid) {
+    // Handle bullet-asteroid collision here
+    this.resetBullet();
+    asteroid.destroy(); // Destroy the asteroid on collision
+    const _asteroid = this.physics.add.sprite(0, 0, 'asteroid');
+    this.asteroids.add(_asteroid);
+  }
+  resetBullet() {
+    this.bullet.setPosition(-100, -100);
+    this.bullet.setVelocity(0, 0);
+    this.bulletActive = false;
+  }
   moveSprite() {
-      if (this.cursorKeys.up.isDown) {
-          this.moveForward(this.ship, 1);
-      }
+    if (this.cursorKeys.up.isDown) {
+      this.moveForward(this.ship, 1);
+    }
 
-      if (this.cursorKeys.right.isDown) {
-          this.ship.angle += 1;
-      }
+    if (this.cursorKeys.right.isDown) {
+      this.ship.angle += 2;
+    }
 
-      if (this.cursorKeys.left.isDown) {
-          this.ship.angle -= 1;
+    if (this.cursorKeys.left.isDown) {
+      this.ship.angle -= 2;
+    }
+    if (
+      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).isDown
+    ) {
+      if (!this.bulletActive) {
+        this.spawnBullet();
       }
-      if (this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE).isDown) {
-        if (!this.bulletActive) {
-            this.spawnBullet();
-        }
-       
-      }
+    }
   }
 
   moveForward(gameObject, speed = 1) {
-      const angleRad = (gameObject.angle - 90) * (Math.PI / 180);
-      gameObject.x = gameObject.x + 1 * Math.cos(angleRad) * speed;
-      gameObject.y = gameObject.y + 1 * Math.sin(angleRad) * speed;
+    const angleRad = (gameObject.angle - 90) * (Math.PI / 180);
+    gameObject.x = gameObject.x + 1 * Math.cos(angleRad) * speed;
+    gameObject.y = gameObject.y + 1 * Math.sin(angleRad) * speed;
   }
 
   checkBoundary() {
-      if (this.ship.x >= 800) {
-          this.ship.x -= 800;
-      }
+    if (this.ship.x >= 800) {
+      this.ship.x -= 800;
+    }
 
-      if (this.ship.x <= 0) {
-          this.ship.x += 800;
-      }
+    if (this.ship.x <= 0) {
+      this.ship.x += 800;
+    }
 
-      if (this.ship.y >= 600) {
-          this.ship.y -= 600;
-      }
+    if (this.ship.y >= 600) {
+      this.ship.y -= 600;
+    }
 
-      if (this.ship.y <= 0) {
-          this.ship.y += 600;
-      }
-      if (this.ship.x >= 800) {
-        this.ship.x -= 800;
+    if (this.ship.y <= 0) {
+      this.ship.y += 600;
+    }
+    if (this.ship.x >= 800) {
+      this.ship.x -= 800;
     }
   }
 
   private handleCollision(ship, asteroid) {
-      console.log('Collision detected between ship and asteroids!');
-      this.scene.start('MainLevel');
-      // Implement collision handling logic here
-      // For example, you can restart the level, decrease health, etc.
+    console.log('Collision detected between ship and asteroids!');
+    this.scene.start('MainLevel');
+    // Implement collision handling logic here
+    // For example, you can restart the level, decrease health, etc.
   }
 }
-
 
 /* -------------------------------------------------------------------------- */
 /*                                RUN GAME.                                   */
@@ -288,7 +297,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: false,
+      debug: true,
       gravity: { y: 0 },
     },
   },
