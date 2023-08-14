@@ -121,10 +121,7 @@ class MainLevel extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('bullet', 'static/piskel image/Bullet Piskel.png');
-      this.load.image('ship', 'path/to/ship.png');
-      this.load.image('asteroid', 'path/to/asteroid.png');
-      this.load.image('bullet', 'path/to/bullet.png');
+
   }
 
   create() {
@@ -227,7 +224,9 @@ resetBullet() {
       if (this.cursorKeys.up.isDown) {
           this.moveForward(this.ship, 1);
       }
-
+      if (this.cursorKeys.up.isUp) {
+        this.moveForward(this.ship, -0.1);
+      }
       if (this.cursorKeys.right.isDown) {
           this.ship.angle += 1;
       }
@@ -291,7 +290,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true,
+      debug: false,
       gravity: { y: 0 },
     },
   },
