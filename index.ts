@@ -224,9 +224,7 @@ resetBullet() {
       if (this.cursorKeys.up.isDown) {
           this.moveForward(this.ship, 1);
       }
-      if (this.cursorKeys.up.isUp) {
-        this.moveForward(this.ship, -0.1);
-      }
+
       if (this.cursorKeys.right.isDown) {
           this.ship.angle += 1;
       }
