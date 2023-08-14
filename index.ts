@@ -140,7 +140,7 @@ class MainLevel extends Phaser.Scene {
     this.asteroids = this.physics.add.group({
       key: 'asteroid',
       repeat: 10, // Create 9 additional asteroids
-      setXY: { x: 0, y: 0, stepX: 80 }, // Adjust spacing between asteroids
+      setXY: { x: Phaser.Math.Between(0, 800), y: Phaser.Math.Between(0, 600), stepX: 80 }, // Adjust spacing between asteroids
     });
 
     this.asteroids.children.iterate((asteroid) => {
@@ -220,9 +220,13 @@ class MainLevel extends Phaser.Scene {
   handleBulletAsteroidCollision(bullet, asteroid) {
     // Handle bullet-asteroid collision here
     this.resetBullet();
+    
     asteroid.destroy(); // Destroy the asteroid on collision
     const _asteroid = this.physics.add.sprite(0, 0, 'asteroid');
+    var randomAngle = Phaser.Math.Between(1, 360);
+    _asteroid.angle = randomAngle;
     this.asteroids.add(_asteroid);
+    
   }
   resetBullet() {
     this.bullet.setPosition(-100, -100);
